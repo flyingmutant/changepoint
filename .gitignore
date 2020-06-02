@@ -1,0 +1,9 @@
+/.idea/
+/.vscode/
+*.swp
+
+/pelt.test
+/pelt.test.exe
+/cpu.prof
+/mem.prof
+/profile*
