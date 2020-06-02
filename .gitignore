@@ -2,8 +2,8 @@
 /.vscode/
 *.swp
 
-/pelt.test
-/pelt.test.exe
-/cpu.prof
-/mem.prof
+/changepoint.test
+/changepoint.test.exe
+/cpu*.prof
+/mem*.prof
 /profile*

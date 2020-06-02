@@ -1,3 +1,3 @@
-module pgregory.net/pelt
+module pgregory.net/changepoint
 
 go 1.14
