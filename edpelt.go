@@ -25,11 +25,13 @@ import (
 // NonParametric uses ED-PELT algorithm for changepoint detection.
 //
 // The implementation is based on the following papers:
-// - [Haynes2017] Kaylea Haynes, Paul Fearnhead, and Idris A. Eckley.
+//
+//   [Haynes2017] Kaylea Haynes, Paul Fearnhead, and Idris A. Eckley.
 //   "A computationally efficient nonparametric approach for changepoint detection."
 //   Statistics and Computing 27, no. 5 (2017): 1293-1305.
 //   https://doi.org/10.1007/s11222-016-9687-5
-// - [Killick2012] Rebecca Killick, Paul Fearnhead, and Idris A. Eckley.
+//
+//   [Killick2012] Rebecca Killick, Paul Fearnhead, and Idris A. Eckley.
 //   "Optimal detection of changepoints with a linear computational cost."
 //   Journal of the American Statistical Association 107, no. 500 (2012): 1590-1598.
 //   https://arxiv.org/pdf/1101.1438.pdf
