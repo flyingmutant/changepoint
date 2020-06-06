@@ -97,7 +97,7 @@ func calcPartialSums(data []float64, k int) []int {
 	offset := 0
 	for i := 0; i < k; i++ {
 		z := -1 + (2*float64(i)+1)/float64(k)              // Values from (-1+1/k) to (1-1/k) with step = 2/k
-		p := 1.0 / (1 + math.Pow(2*float64(n)-1, -z))      // Values from 0.0 to 1.0
+		p := 1 / (1 + math.Pow(2*float64(n)-1, -z))        // Values from 0.0 to 1.0
 		t := sortedData[int(math.Trunc((float64(n)-1)*p))] // Quantile value, formula (2.1) in [Haynes2017]
 
 		for tau := 1; tau <= n; tau++ {
@@ -141,6 +141,6 @@ func (ed *edState) cost(_ /* tau0 */ int, tau1 int, tau2 int) float64 {
 		offset += ed.n + 1
 	}
 
-	c := -math.Log(2*float64(ed.n) - 1)  // Constant from Lemma 3.1 in [Haynes2017]
-	return 2.0 * c / float64(ed.k) * sum // See Section 3.1 "Discrete approximation" in [Haynes2017]
+	c := -math.Log(2*float64(ed.n) - 1) // Constant from Lemma 3.1 in [Haynes2017]
+	return 2 * c / float64(ed.k) * sum  // See Section 3.1 "Discrete approximation" in [Haynes2017]
 }
