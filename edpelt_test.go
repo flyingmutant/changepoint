@@ -94,12 +94,13 @@ func TestNonParametricConst(t *testing.T) {
 		}, 1, []int{99}},
 		{"Test3", []float64{0, 0, 0, 0, 0, 100, 100, 100, 100}, 1, []int{4}},
 		{"Test4", []float64{0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2}, 1, []int{5, 11}},
-		{"MinDistance", []float64{0, 0, 0, 0, 0}, 4, nil},
+		{"MinDistanceTooBig", []float64{0, 0, 0, 0, 1, 1, 1}, 4, nil},
+		{"MinDistanceJustRight", []float64{0, 0, 0, 0, 1, 1, 1, 1}, 4, []int{3}},
 	}
 
 	for _, td := range testData {
 		t.Run(td.name, func(t *testing.T) {
-			compareChangepoints(t, td.data, 1, td.ref)
+			compareChangepoints(t, td.data, td.minDistance, td.ref)
 		})
 	}
 }
