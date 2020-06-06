@@ -113,8 +113,7 @@ func edCost(n int, k int, partialSums []int, tau1 int, tau2 int) float64 {
 	tauDiff := tau2 - tau1
 	for i := 0; i < k; i++ {
 		// actualSum is (count(data[j] < t) * 2 + count(data[j] == t) * 1) for j=tau1..tau2-1
-		actualSum := partialSums[offset+tauDiff] -
-			partialSums[offset] // partialSums'[i, tau2] - partialSums'[i, tau1]
+		actualSum := partialSums[offset+tauDiff] - partialSums[offset] // partialSums'[i, tau2] - partialSums'[i, tau1]
 
 		// We skip these two cases (correspond to fit = 0 or fit = 1) because of invalid math.Log values
 		if actualSum != 0 && actualSum != tauDiff*2 {
