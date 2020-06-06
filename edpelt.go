@@ -40,24 +40,10 @@ func NonParametric(data []float64, minSegment int) []int {
 		panic("minSegment must be positive")
 	}
 
-	if len(data) <= 2 || len(data) < 2*minSegment {
+	n := len(data)
+	if n <= 2 || n < 2*minSegment {
 		return nil
 	}
-
-	s := newEDState(data)
-
-	return pelt(data, minSegment, s.cost, s.penalty)
-}
-
-type edState struct {
-	n           int
-	penalty     float64
-	k           int
-	partialSums []int
-}
-
-func newEDState(data []float64) *edState {
-	n := len(data)
 
 	// The penalty which we add to the final cost for each additional changepoint
 	// Here we use the Modified Bayesian Information Criterion
@@ -71,12 +57,11 @@ func newEDState(data []float64) *edState {
 	// We should precalculate sums for empirical CDF, it will allow fast evaluating of the segment cost
 	partialSums := calcPartialSums(data, k)
 
-	return &edState{
-		n:           n,
-		penalty:     penalty,
-		k:           k,
-		partialSums: partialSums,
+	cost := func(tau1 int, tau2 int) float64 {
+		return edCost(n, k, partialSums, tau1, tau2)
 	}
+
+	return pelt(data, minSegment, cost, penalty)
 }
 
 // Partial sums for empirical CDF (formula (2.1) from Section 2.1 "Model" in [Haynes2017])
@@ -122,14 +107,14 @@ func calcPartialSums(data []float64, k int) []int {
 	return partialSums
 }
 
-func (ed *edState) cost(tau1 int, tau2 int) float64 {
+func edCost(n int, k int, partialSums []int, tau1 int, tau2 int) float64 {
 	sum := 0.0
 	offset := tau1 // offset of partialSums'[i, tau1] in the single-dimensional `partialSums` array
 	tauDiff := tau2 - tau1
-	for i := 0; i < ed.k; i++ {
+	for i := 0; i < k; i++ {
 		// actualSum is (count(data[j] < t) * 2 + count(data[j] == t) * 1) for j=tau1..tau2-1
-		actualSum := ed.partialSums[offset+tauDiff] -
-			ed.partialSums[offset] // partialSums'[i, tau2] - partialSums'[i, tau1]
+		actualSum := partialSums[offset+tauDiff] -
+			partialSums[offset] // partialSums'[i, tau2] - partialSums'[i, tau1]
 
 		// We skip these two cases (correspond to fit = 0 or fit = 1) because of invalid math.Log values
 		if actualSum != 0 && actualSum != tauDiff*2 {
@@ -141,9 +126,9 @@ func (ed *edState) cost(tau1 int, tau2 int) float64 {
 			sum += lnp
 		}
 
-		offset += ed.n + 1
+		offset += n + 1
 	}
 
-	c := -math.Log(2*float64(ed.n) - 1) // Constant from Lemma 3.1 in [Haynes2017]
-	return 2 * c / float64(ed.k) * sum  // See Section 3.1 "Discrete approximation" in [Haynes2017]
+	c := -math.Log(2*float64(n) - 1) // Constant from Lemma 3.1 in [Haynes2017]
+	return 2 * c / float64(k) * sum  // See Section 3.1 "Discrete approximation" in [Haynes2017]
 }
