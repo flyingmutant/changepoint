@@ -93,9 +93,9 @@ func calcPartialSums(data []float64, k int) []int {
 
 	offset := 0
 	for i := 0; i < k; i++ {
-		z := -1 + (2*float64(i)+1)/float64(k)              // Values from (-1+1/k) to (1-1/k) with step = 2/k
-		p := 1 / (1 + math.Pow(2*float64(n)-1, -z))        // Values from 0.0 to 1.0
-		t := sortedData[int(math.Trunc((float64(n)-1)*p))] // Quantile value, formula (2.1) in [Haynes2017]
+		z := -1 + (2*float64(i)+1)/float64(k)       // Values from (-1+1/k) to (1-1/k) with step = 2/k
+		p := 1 / (1 + math.Pow(2*float64(n)-1, -z)) // Values from 0.0 to 1.0
+		t := sortedData[int(p*float64(n-1))]        // Quantile value, formula (2.1) in [Haynes2017]
 
 		for tau := 1; tau <= n; tau++ {
 			// `curPartialSumsValue` is a temp variable to keep the future value of `partialSums[offset + tau]`
