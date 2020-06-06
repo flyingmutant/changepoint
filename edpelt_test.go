@@ -38,6 +38,7 @@ func TestNonParametricConst(t *testing.T) {
 		minDistance int
 		ref         []int
 	}{
+		{"Empty", []float64{}, 1, nil},
 		{"Test1", []float64{3240, 3207, 2029, 3028, 3021, 2624, 3290, 2823, 3573}, 1, nil},
 		{"Test2", []float64{
 			8.51775781386248, 1013.74746867838, 969.560811828691, 9.99903626421251,

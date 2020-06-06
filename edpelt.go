@@ -36,6 +36,14 @@ import (
 //   Journal of the American Statistical Association 107, no. 500 (2012): 1590-1598.
 //   https://arxiv.org/pdf/1101.1438.pdf
 func NonParametric(data []float64, minDistance int) []int {
+	if minDistance < 1 {
+		panic("minDistance must be positive")
+	}
+
+	if len(data) <= 2 || len(data) < 2*minDistance {
+		return nil
+	}
+
 	s := newEDState(data)
 
 	return pelt(data, minDistance, s.cost, s.penalty)

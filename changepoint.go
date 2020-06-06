@@ -24,14 +24,7 @@ import (
 type costFunc func(tau0 int, tau1 int, tau2 int) float64
 
 func pelt(data []float64, minDistance int, cost costFunc, penalty float64) []int {
-	if minDistance < 1 {
-		panic("minDistance must be positive")
-	}
-
 	n := len(data)
-	if n <= 2 || 2*minDistance > n {
-		return nil
-	}
 
 	// We will use dynamic programming to find the best solution; `bestCost` is the cost array.
 	// `bestCost[i]` is the cost for subarray `data[0..i-1]`.
