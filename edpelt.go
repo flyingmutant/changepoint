@@ -58,10 +58,7 @@ func newEDState(data []float64) *edState {
 	// `k` is the number of quantiles that we use to approximate an integral during the segment cost evaluation
 	// We use `k=Ceiling(4*log(n))` as suggested in the Section 4.3 "Choice of K in ED-PELT" in [Haynes2017]
 	// `k` can't be greater than `n`, so we should always use the `Min` function here (important for n <= 8)
-	k := int(math.Ceil(4 * math.Log(float64(n))))
-	if k > n {
-		k = n
-	}
+	k := int(math.Min(float64(n), math.Ceil(4*math.Log(float64(n)))))
 
 	// We should precalculate sums for empirical CDF, it will allow fast evaluating of the segment cost
 	partialSums := calcPartialSums(data, k)
