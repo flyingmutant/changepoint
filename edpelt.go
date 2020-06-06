@@ -106,16 +106,14 @@ func calcPartialSums(data []float64, k int) []int {
 		t := sortedData[int(p*float64(n-1))]        // Quantile value, formula (2.1) in [Haynes2017]
 
 		for tau := 1; tau <= n; tau++ {
-			// `curPartialSumsValue` is a temp variable to keep the future value of `partialSums[offset + tau]`
-			// (or `partialSums'[i, tau]`)
-			curPartialSumsValue := partialSums[offset+tau-1]
+			delta := 0
 			if data[tau-1] < t {
-				curPartialSumsValue += 2 // We use doubled value (2) instead of original 1.0
+				delta = 2 // We use doubled value (2) instead of original 1.0
 			} else if data[tau-1] == t {
-				curPartialSumsValue += 1 // We use doubled value (1) instead of original 0.5
+				delta = 1 // We use doubled value (1) instead of original 0.5
 			}
 
-			partialSums[offset+tau] = curPartialSumsValue
+			partialSums[offset+tau] = partialSums[offset+tau-1] + delta
 		}
 
 		offset += n + 1
