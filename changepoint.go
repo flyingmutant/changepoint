@@ -23,7 +23,7 @@ import (
 // Remember that tau are one-based indexes.
 type costFunc func(tau0 int, tau1 int, tau2 int) float64
 
-func pelt(data []float64, minDistance int, cost costFunc, penalty float64) []int {
+func pelt(data []float64, minSegment int, cost costFunc, penalty float64) []int {
 	n := len(data)
 
 	// We will use dynamic programming to find the best solution; `bestCost` is the cost array.
@@ -31,7 +31,7 @@ func pelt(data []float64, minDistance int, cost costFunc, penalty float64) []int
 	// It's a 1-based array (`data[0]`..`data[n-1]` correspond to `bestCost[1]`..`bestCost[n]`)
 	bestCost := make([]float64, n+1)
 	bestCost[0] = -penalty
-	for curTau := minDistance; curTau < 2*minDistance; curTau++ {
+	for curTau := minSegment; curTau < 2*minSegment; curTau++ {
 		bestCost[curTau] = cost(0, 0, curTau)
 	}
 
@@ -46,13 +46,13 @@ func pelt(data []float64, minDistance int, cost costFunc, penalty float64) []int
 	// removed. See [Killick2012] for details.
 	prevTaus := make([]int, n+1) // The maximum number of the previous tau values is n + 1
 	prevTaus[0] = 0
-	prevTaus[1] = minDistance
+	prevTaus[1] = minSegment
 	costForPrevTau := make([]float64, n+1)
 	prevTausCount := 2 // The counter of previous tau values. Defines the size of `prevTaus` and `costForPrevTau`.
 
 	// Following the dynamic programming approach, we enumerate all tau positions. For each `curTau`, we pretend
 	// that it's the end of the last segment and trying to find the end of the previous segment.
-	for curTau := 2 * minDistance; curTau < n+1; curTau++ {
+	for curTau := 2 * minSegment; curTau < n+1; curTau++ {
 		// For each previous tau, we should calculate the cost of taking this tau as the end of the previous
 		// segment. This cost equals the cost for the `prevTau` plus cost of the new segment (from `prevTau`
 		// to `curTau`) plus penalty for the new changepoint.
@@ -78,8 +78,8 @@ func pelt(data []float64, minDistance int, cost costFunc, penalty float64) []int
 			}
 		}
 
-		// We add a new tau value that is located on the `minDistance` distance from the next `curTau` value
-		prevTaus[newPrevTausCount] = curTau - minDistance + 1
+		// We add a new tau value that is located on the `minSegment` distance from the next `curTau` value
+		prevTaus[newPrevTausCount] = curTau - minSegment + 1
 		prevTausCount = newPrevTausCount + 1
 	}
 

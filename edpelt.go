@@ -35,18 +35,18 @@ import (
 //   "Optimal detection of changepoints with a linear computational cost."
 //   Journal of the American Statistical Association 107, no. 500 (2012): 1590-1598.
 //   https://arxiv.org/pdf/1101.1438.pdf
-func NonParametric(data []float64, minDistance int) []int {
-	if minDistance < 1 {
-		panic("minDistance must be positive")
+func NonParametric(data []float64, minSegment int) []int {
+	if minSegment < 1 {
+		panic("minSegment must be positive")
 	}
 
-	if len(data) <= 2 || len(data) < 2*minDistance {
+	if len(data) <= 2 || len(data) < 2*minSegment {
 		return nil
 	}
 
 	s := newEDState(data)
 
-	return pelt(data, minDistance, s.cost, s.penalty)
+	return pelt(data, minSegment, s.cost, s.penalty)
 }
 
 type edState struct {

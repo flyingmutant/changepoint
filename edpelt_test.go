@@ -22,10 +22,10 @@ import (
 	"pgregory.net/changepoint"
 )
 
-func compareChangepoints(t *testing.T, data []float64, minDistance int, ref []int) {
+func compareChangepoints(t *testing.T, data []float64, minSegment int, ref []int) {
 	t.Helper()
 
-	p := changepoint.NonParametric(data, minDistance)
+	p := changepoint.NonParametric(data, minSegment)
 	if !reflect.DeepEqual(p, ref) {
 		t.Fatalf("got %#v instead of %#v", p, ref)
 	}
@@ -33,10 +33,10 @@ func compareChangepoints(t *testing.T, data []float64, minDistance int, ref []in
 
 func TestNonParametricConst(t *testing.T) {
 	testData := []struct {
-		name        string
-		data        []float64
-		minDistance int
-		ref         []int
+		name       string
+		data       []float64
+		minSegment int
+		ref        []int
 	}{
 		{"Empty", []float64{}, 1, nil},
 		{"Test1", []float64{3240, 3207, 2029, 3028, 3021, 2624, 3290, 2823, 3573}, 1, nil},
@@ -94,13 +94,13 @@ func TestNonParametricConst(t *testing.T) {
 		}, 1, []int{99}},
 		{"Test3", []float64{0, 0, 0, 0, 0, 100, 100, 100, 100}, 1, []int{4}},
 		{"Test4", []float64{0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2}, 1, []int{5, 11}},
-		{"MinDistanceTooBig", []float64{0, 0, 0, 0, 1, 1, 1}, 4, nil},
-		{"MinDistanceJustRight", []float64{0, 0, 0, 0, 1, 1, 1, 1}, 4, []int{3}},
+		{"MinSegmentTooBig", []float64{0, 0, 0, 0, 1, 1, 1}, 4, nil},
+		{"MinSegmentJustRight", []float64{0, 0, 0, 0, 1, 1, 1, 1}, 4, []int{3}},
 	}
 
 	for _, td := range testData {
 		t.Run(td.name, func(t *testing.T) {
-			compareChangepoints(t, td.data, td.minDistance, td.ref)
+			compareChangepoints(t, td.data, td.minSegment, td.ref)
 		})
 	}
 }
