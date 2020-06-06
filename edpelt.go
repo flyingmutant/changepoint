@@ -122,7 +122,7 @@ func calcPartialSums(data []float64, k int) []int {
 	return partialSums
 }
 
-func (ed *edState) cost(_ /* tau0 */ int, tau1 int, tau2 int) float64 {
+func (ed *edState) cost(tau1 int, tau2 int) float64 {
 	sum := 0.0
 	offset := tau1 // offset of partialSums'[i, tau1] in the single-dimensional `partialSums` array
 	tauDiff := tau2 - tau1

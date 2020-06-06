@@ -21,7 +21,7 @@ import (
 
 // Calculates the cost of the (tau1; tau2] segment.
 // Remember that tau are one-based indexes.
-type costFunc func(tau0 int, tau1 int, tau2 int) float64
+type costFunc func(tau1 int, tau2 int) float64
 
 func pelt(data []float64, minSegment int, cost costFunc, penalty float64) []int {
 	n := len(data)
@@ -32,7 +32,7 @@ func pelt(data []float64, minSegment int, cost costFunc, penalty float64) []int 
 	bestCost := make([]float64, n+1)
 	bestCost[0] = -penalty
 	for curTau := minSegment; curTau < 2*minSegment; curTau++ {
-		bestCost[curTau] = cost(0, 0, curTau)
+		bestCost[curTau] = cost(0, curTau)
 	}
 
 	// `prevChangepointIndex` is an array of references to previous changepoints. If the current segment ends at
@@ -58,9 +58,7 @@ func pelt(data []float64, minSegment int, cost costFunc, penalty float64) []int 
 		// to `curTau`) plus penalty for the new changepoint.
 		for i := 0; i < prevTausCount; i++ {
 			prevTau := prevTaus[i]
-			costForPrevTau[i] = bestCost[prevTau] +
-				cost(prevChangepointIndex[prevTau], prevTau, curTau) +
-				penalty
+			costForPrevTau[i] = bestCost[prevTau] + cost(prevTau, curTau) + penalty
 		}
 
 		// Now we should choose the tau that provides the minimum possible cost.
