@@ -55,7 +55,7 @@ func NonParametric(data []float64, minSegment int) []int {
 	k := int(math.Min(float64(n), math.Ceil(4*math.Log(float64(n)))))
 
 	// We should precalculate sums for empirical CDF, it will allow fast evaluating of the segment cost
-	partialSums := calcPartialSums(data, k)
+	partialSums := edPartialSums(data, k)
 
 	cost := func(tau1 int, tau2 int) float64 {
 		return edCost(n, k, partialSums, tau1, tau2)
@@ -78,7 +78,7 @@ func NonParametric(data []float64, minSegment int) []int {
 //   2 and 1 instead of 1 and 0.5 from the [Haynes2017].
 // - Note that these quantiles are not uniformly distributed: tails of the data distribution contain more
 //   quantile values than the center of the distribution
-func calcPartialSums(data []float64, k int) []int {
+func edPartialSums(data []float64, k int) []int {
 	n := len(data)
 	partialSums := make([]int, k*(n+1))
 	sortedData := append([]float64(nil), data...)
