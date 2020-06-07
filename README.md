@@ -1,4 +1,4 @@
-# Changepoint [![GoDoc][godoc-img]][godoc] [![CI][ci-img]][ci]
+# changepoint [![GoDoc][godoc-img]][godoc] [![CI][ci-img]][ci]
 
 Changepoint is a Go library for changepoint detection with support for
 nonparametric distributions.
