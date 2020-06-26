@@ -61,12 +61,11 @@ func pelt(data []float64, minSegment int, cost costFunc, penalty float64) []int 
 		}
 
 		// Now we should choose the tau that provides the minimum possible cost.
-		bestPrevTauIndex := whichMin(costForPrevTau[:prevTausCount])
-		bestCost[curTau] = costForPrevTau[bestPrevTauIndex]
+		bestPrevTauIndex, curBestCost := whichMin(costForPrevTau[:prevTausCount])
+		bestCost[curTau] = curBestCost
 		prevChangepointIndex[curTau] = prevTaus[bestPrevTauIndex]
 
 		// Prune phase: we remove "useless" tau values that will not help to achieve minimum cost in the future
-		curBestCost := bestCost[curTau]
 		newPrevTausCount := 0
 		for i, prevTauCost := range costForPrevTau[:prevTausCount] {
 			if prevTauCost < curBestCost+penalty {
@@ -96,7 +95,7 @@ func pelt(data []float64, minSegment int, cost costFunc, penalty float64) []int 
 	return changepoints
 }
 
-func whichMin(data []float64) int {
+func whichMin(data []float64) (int, float64) {
 	ix, min := -1, math.Inf(1)
 
 	for i, v := range data {
@@ -105,5 +104,5 @@ func whichMin(data []float64) int {
 		}
 	}
 
-	return ix
+	return ix, min
 }
