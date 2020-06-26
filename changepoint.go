@@ -68,8 +68,8 @@ func pelt(data []float64, minSegment int, cost costFunc, penalty float64) []int 
 		// Prune phase: we remove "useless" tau values that will not help to achieve minimum cost in the future
 		curBestCost := bestCost[curTau]
 		newPrevTausCount := 0
-		for i := 0; i < prevTausCount; i++ {
-			if costForPrevTau[i] < curBestCost+penalty {
+		for i, prevTauCost := range costForPrevTau[:prevTausCount] {
+			if prevTauCost < curBestCost+penalty {
 				prevTaus[newPrevTausCount] = prevTaus[i]
 				newPrevTausCount++
 			}
