@@ -90,15 +90,15 @@ func edPartialSums(data []float64, k int) []int {
 		p := 1 / (1 + math.Pow(2*float64(n)-1, -z)) // Values from 0.0 to 1.0
 		t := sortedData[int(p*float64(n-1))]        // Quantile value, formula (2.1) in [Haynes2017]
 
-		for tau := 1; tau <= n; tau++ {
+		for j, val := range data {
 			delta := 0
-			if data[tau-1] < t {
+			if val < t {
 				delta = 2 // We use doubled value (2) instead of original 1.0
-			} else if data[tau-1] == t {
+			} else if val == t {
 				delta = 1 // We use doubled value (1) instead of original 0.5
 			}
 
-			partialSums[offset+tau] = partialSums[offset+tau-1] + delta
+			partialSums[offset+j+1] = partialSums[offset+j] + delta
 		}
 
 		offset += n + 1
