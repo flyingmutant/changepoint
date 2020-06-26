@@ -56,8 +56,7 @@ func pelt(data []float64, minSegment int, cost costFunc, penalty float64) []int 
 		// For each previous tau, we should calculate the cost of taking this tau as the end of the previous
 		// segment. This cost equals the cost for the `prevTau` plus cost of the new segment (from `prevTau`
 		// to `curTau`) plus penalty for the new changepoint.
-		for i := 0; i < prevTausCount; i++ {
-			prevTau := prevTaus[i]
+		for i, prevTau := range prevTaus[:prevTausCount] {
 			costForPrevTau[i] = bestCost[prevTau] + cost(prevTau, curTau) + penalty
 		}
 
