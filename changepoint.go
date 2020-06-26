@@ -87,8 +87,8 @@ func pelt(data []float64, minSegment int, cost costFunc, penalty float64) []int 
 	}
 
 	// The result changepoints should be sorted in ascending order.
-	for left, right := 0, len(changepoints)-1; left < right; left, right = left+1, right-1 {
-		changepoints[left], changepoints[right] = changepoints[right], changepoints[left]
+	for l, r := 0, len(changepoints)-1; l < r; l, r = l+1, r-1 {
+		changepoints[l], changepoints[r] = changepoints[r], changepoints[l]
 	}
 
 	return changepoints
