@@ -109,23 +109,22 @@ func edPartialSums(data []float64, k int) []int {
 
 func edCost(n int, k int, partialSums []int, tau1 int, tau2 int) float64 {
 	sum := 0.0
-	offset := tau1 // offset of partialSums'[i, tau1] in the single-dimensional `partialSums` array
 	tauDiff := tau2 - tau1
-	for i := 0; i < k; i++ {
+	maxOffset := k * (n + 1)
+	for offset := 0; offset < maxOffset; offset += n + 1 {
 		// actualSum is (count(data[j] < t) * 2 + count(data[j] == t) * 1) for j=tau1..tau2-1
-		actualSum := partialSums[offset+tauDiff] - partialSums[offset] // partialSums'[i, tau2] - partialSums'[i, tau1]
+		actualSum := partialSums[offset+tau2] - partialSums[offset+tau1] // partialSums'[i, tau2] - partialSums'[i, tau1]
 
 		// We skip these two cases (correspond to fit = 0 or fit = 1) because of invalid math.Log values
-		if actualSum != 0 && actualSum != tauDiff*2 {
-			// Empirical CDF $\hat{F}_i(t)$ (Section 2.1 "Model" in [Haynes2017])
-			fit := float64(actualSum) * 0.5 / float64(tauDiff)
-
-			// Segment cost $\mathcal{L}_{np}$ (Section 2.2 "Nonparametric maximum likelihood" in [Haynes2017])
-			lnp := float64(tauDiff) * (fit*math.Log(fit) + (1-fit)*math.Log(1-fit))
-			sum += lnp
+		if actualSum == 0 || actualSum == tauDiff*2 {
+			continue
 		}
 
-		offset += n + 1
+		// Empirical CDF $\hat{F}_i(t)$ (Section 2.1 "Model" in [Haynes2017])
+		fit := float64(actualSum) * 0.5 / float64(tauDiff)
+
+		// Segment cost $\mathcal{L}_{np}$ (Section 2.2 "Nonparametric maximum likelihood" in [Haynes2017])
+		sum += float64(tauDiff) * (fit*math.Log(fit) + (1-fit)*math.Log(1-fit))
 	}
 
 	c := -math.Log(2*float64(n) - 1) // Constant from Lemma 3.1 in [Haynes2017]
