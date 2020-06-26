@@ -132,3 +132,9 @@ func TestNonParametricSeq(t *testing.T) {
 		})
 	}
 }
+
+func BenchmarkNonParametric(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		changepoint.NonParametric(big, 1)
+	}
+}
