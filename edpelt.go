@@ -120,10 +120,10 @@ func edCost(n int, k int, partialSums []int, tau1 int, tau2 int) float64 {
 			continue
 		}
 
-		// Empirical CDF $\hat{F}_i(t)$ (Section 2.1 "Model" in [Haynes2017])
+		// Empirical CDF F_i(t) (Section 2.1 "Model" in [Haynes2017])
 		fit := float64(actualSum) * 0.5 / float64(tauDiff)
 
-		// Segment cost $\mathcal{L}_{np}$ (Section 2.2 "Nonparametric maximum likelihood" in [Haynes2017])
+		// Segment cost L_np (Section 2.2 "Nonparametric maximum likelihood" in [Haynes2017])
 		sum += fit*math.Log(fit) + (1-fit)*math.Log(1-fit)
 	}
 
