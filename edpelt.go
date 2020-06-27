@@ -124,9 +124,9 @@ func edCost(n int, k int, partialSums []int, tau1 int, tau2 int) float64 {
 		fit := float64(actualSum) * 0.5 / float64(tauDiff)
 
 		// Segment cost $\mathcal{L}_{np}$ (Section 2.2 "Nonparametric maximum likelihood" in [Haynes2017])
-		sum += float64(tauDiff) * (fit*math.Log(fit) + (1-fit)*math.Log(1-fit))
+		sum += fit*math.Log(fit) + (1-fit)*math.Log(1-fit)
 	}
 
-	c := -math.Log(2*float64(n) - 1) // Constant from Lemma 3.1 in [Haynes2017]
-	return 2 * c / float64(k) * sum  // See Section 3.1 "Discrete approximation" in [Haynes2017]
+	c := -math.Log(2*float64(n) - 1)                   // Constant from Lemma 3.1 in [Haynes2017]
+	return 2 * c / float64(k) * sum * float64(tauDiff) // See Section 3.1 "Discrete approximation" in [Haynes2017]
 }
