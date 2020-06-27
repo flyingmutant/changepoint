@@ -108,27 +108,38 @@ func edPartialSums(data []float64, k int) []int32 {
 }
 
 func edCost(n int, k int, partialSums []int32, tau1 int, tau2 int) float64 {
-	tauDiff := tau2 - tau1
-	tauDiff2 := int32(2 * tauDiff)
-	tauDiff2f := float64(2 * tauDiff)
+	tauDiff2i := int32(2 * (tau2 - tau1))
+	tauDiff2f := float64(2 * (tau2 - tau1))
+	tauDiff2fLog := math.Log(tauDiff2f)
 
 	sum := 0.0
 	maxOffset := k * (n + 1)
 	for offset := 0; offset < maxOffset; offset += n + 1 {
 		// actualSum is (count(data[j] < t) * 2 + count(data[j] == t) * 1) for j=tau1..tau2-1
 		actualSum := partialSums[offset+tau2] - partialSums[offset+tau1] // partialSums'[i, tau2] - partialSums'[i, tau1]
-		if actualSum == 0 || actualSum == tauDiff2 {
+		if actualSum == 0 || actualSum == tauDiff2i {
 			continue // We skip these two cases (correspond to fit = 0 or fit = 1) because of invalid math.Log values
 		}
 
-		// Empirical CDF F_i(t) (Section 2.1 "Model" in [Haynes2017])
-		fit := float64(actualSum) / tauDiff2f
-		fit1 := 1 - fit
-
+		// Empirical CDF F_i(t) (Section 2.1 "Model" in [Haynes2017]):
+		//   fit = actualSum / (2 * (tau2 - tau1))
 		// Segment cost L_np (Section 2.2 "Nonparametric maximum likelihood" in [Haynes2017])
-		sum += fit*math.Log(fit) + fit1*math.Log(fit1)
+		//   lnp = (tau2 - tau1) * (fit*log(fit) + (1-fit)*log(1-fit))
+		// In the end, we multiply sum by 2 (Section 3.1 "Discrete approximation" in [Haynes2017]):
+		//   return 2 * c / k * sum
+		//
+		// Substituting fit into lnp, and transforming log(x/y) into log(x) - log(y),
+		// we can get rid of extra multiplications and divisions:
+
+		actualSumF := float64(actualSum)
+		actualSumFSub := tauDiff2f - actualSumF
+
+		sum += actualSumF * (math.Log(actualSumF) - tauDiff2fLog)
+		sum += actualSumFSub * (math.Log(actualSumFSub) - tauDiff2fLog)
 	}
 
-	c := -math.Log(2*float64(n) - 1)                   // Constant from Lemma 3.1 in [Haynes2017]
-	return 2 * c / float64(k) * sum * float64(tauDiff) // See Section 3.1 "Discrete approximation" in [Haynes2017]
+	// Constant from Lemma 3.1 in [Haynes2017]
+	c := -math.Log(2*float64(n) - 1)
+
+	return c / float64(k) * sum
 }
