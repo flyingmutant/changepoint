@@ -108,23 +108,25 @@ func edPartialSums(data []float64, k int) []int {
 }
 
 func edCost(n int, k int, partialSums []int, tau1 int, tau2 int) float64 {
-	sum := 0.0
 	tauDiff := tau2 - tau1
+	tauDiff2 := 2 * tauDiff
+	tauDiff2f := float64(2 * tauDiff)
+
+	sum := 0.0
 	maxOffset := k * (n + 1)
 	for offset := 0; offset < maxOffset; offset += n + 1 {
 		// actualSum is (count(data[j] < t) * 2 + count(data[j] == t) * 1) for j=tau1..tau2-1
 		actualSum := partialSums[offset+tau2] - partialSums[offset+tau1] // partialSums'[i, tau2] - partialSums'[i, tau1]
-
-		// We skip these two cases (correspond to fit = 0 or fit = 1) because of invalid math.Log values
-		if actualSum == 0 || actualSum == tauDiff*2 {
-			continue
+		if actualSum == 0 || actualSum == tauDiff2 {
+			continue // We skip these two cases (correspond to fit = 0 or fit = 1) because of invalid math.Log values
 		}
 
 		// Empirical CDF F_i(t) (Section 2.1 "Model" in [Haynes2017])
-		fit := float64(actualSum) * 0.5 / float64(tauDiff)
+		fit := float64(actualSum) / tauDiff2f
+		fit1 := 1 - fit
 
 		// Segment cost L_np (Section 2.2 "Nonparametric maximum likelihood" in [Haynes2017])
-		sum += fit*math.Log(fit) + (1-fit)*math.Log(1-fit)
+		sum += fit*math.Log(fit) + fit1*math.Log(fit1)
 	}
 
 	c := -math.Log(2*float64(n) - 1)                   // Constant from Lemma 3.1 in [Haynes2017]
