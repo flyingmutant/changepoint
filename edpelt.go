@@ -78,9 +78,9 @@ func NonParametric(data []float64, minSegment int) []int {
 //   2 and 1 instead of 1 and 0.5 from the [Haynes2017].
 // - Note that these quantiles are not uniformly distributed: tails of the data distribution contain more
 //   quantile values than the center of the distribution
-func edPartialSums(data []float64, k int) []int {
+func edPartialSums(data []float64, k int) []int32 {
 	n := len(data)
-	partialSums := make([]int, k*(n+1))
+	partialSums := make([]int32, k*(n+1))
 	sortedData := append([]float64(nil), data...)
 	sort.Float64s(sortedData)
 
@@ -91,7 +91,7 @@ func edPartialSums(data []float64, k int) []int {
 		t := sortedData[int(p*float64(n-1))]        // Quantile value, formula (2.1) in [Haynes2017]
 
 		for j, val := range data {
-			delta := 0
+			delta := int32(0)
 			if val < t {
 				delta = 2 // We use doubled value (2) instead of original 1.0
 			} else if val == t {
@@ -107,9 +107,9 @@ func edPartialSums(data []float64, k int) []int {
 	return partialSums
 }
 
-func edCost(n int, k int, partialSums []int, tau1 int, tau2 int) float64 {
+func edCost(n int, k int, partialSums []int32, tau1 int, tau2 int) float64 {
 	tauDiff := tau2 - tau1
-	tauDiff2 := 2 * tauDiff
+	tauDiff2 := int32(2 * tauDiff)
 	tauDiff2f := float64(2 * tauDiff)
 
 	sum := 0.0
