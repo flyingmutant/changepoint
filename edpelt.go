@@ -41,7 +41,7 @@ func NonParametric(data []float64, minSegment int) []int {
 	}
 
 	n := len(data)
-	if n <= 2 || n < 2*minSegment {
+	if n <= 2 || n/2 < minSegment {
 		return nil
 	}
 

@@ -17,9 +17,11 @@ package changepoint_test
 import (
 	"fmt"
 	"reflect"
+	"sort"
 	"testing"
 
 	"pgregory.net/changepoint"
+	"pgregory.net/rapid"
 )
 
 var (
@@ -86,7 +88,7 @@ func compareChangepoints(t *testing.T, data []float64, minSegment int, ref []int
 	}
 }
 
-func TestNonParametricConst(t *testing.T) {
+func TestNonParametric_Const(t *testing.T) {
 	testData := []struct {
 		name       string
 		data       []float64
@@ -109,7 +111,7 @@ func TestNonParametricConst(t *testing.T) {
 	}
 }
 
-func TestNonParametricSeq(t *testing.T) {
+func TestNonParametric_Seq(t *testing.T) {
 	testData := []struct {
 		start int
 		end   int
@@ -137,4 +139,28 @@ func BenchmarkNonParametric(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		changepoint.NonParametric(big, 1)
 	}
+}
+
+func TestNonParametric_ValidDistinctSortedIndexes(t *testing.T) {
+	rapid.Check(t, func(t *rapid.T) {
+		var (
+			data       = rapid.SliceOf(rapid.Float64()).Draw(t, "data").([]float64)
+			minSegment = rapid.IntMin(1).Draw(t, "minSegment").(int)
+		)
+
+		changes := changepoint.NonParametric(data, minSegment)
+		if !sort.IntsAreSorted(changes) {
+			t.Fatalf("changepoints %v are not sorted", changes)
+		}
+
+		for i, c := range changes {
+			if i > 0 && c == changes[i-1] {
+				t.Errorf("duplicate changepoint index %v", c)
+			}
+
+			if c < 0 || c >= len(data) {
+				t.Errorf("out-of-bounds changepoint index %v", c)
+			}
+		}
+	})
 }
