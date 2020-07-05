@@ -15,9 +15,7 @@
 // Package changepoint implements algorithms for changepoint detection.
 package changepoint
 
-import (
-	"math"
-)
+import "math"
 
 // Calculates the cost of the (tau1; tau2] segment.
 // Remember that tau are one-based indexes.
