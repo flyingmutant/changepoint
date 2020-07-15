@@ -1,4 +1,4 @@
-# changepoint [![GoDoc][godoc-img]][godoc] [![CI][ci-img]][ci]
+# changepoint [![PkgGoDev][godev-img]][godev] [![CI][ci-img]][ci]
 
 Changepoint is a Go library for changepoint detection with support for
 nonparametric distributions.
@@ -37,7 +37,7 @@ OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ```
 
-[godoc-img]: https://godoc.org/pgregory.net/changepoint?status.svg
-[godoc]: https://godoc.org/pgregory.net/changepoint
+[godev-img]: https://pkg.go.dev/badge/pgregory.net/changepoint
+[godev]: https://pkg.go.dev/pgregory.net/changepoint
 [ci-img]: https://github.com/flyingmutant/changepoint/workflows/CI/badge.svg
 [ci]: https://github.com/flyingmutant/changepoint/actions
