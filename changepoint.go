@@ -81,7 +81,7 @@ func pelt(data []float64, minSegment int, cost costFunc, penalty float64) []int 
 	var changepoints []int
 	// The index of the end of the last segment is `n`
 	for i := prevChangepointIndex[n]; i != 0; i = prevChangepointIndex[i] {
-		changepoints = append(changepoints, i-1) // 1-based indexes should be be transformed to 0-based indexes
+		changepoints = append(changepoints, i) // 1-based index of the end of segment is equal to 0-based index of the beginning of next segment
 	}
 
 	// The result changepoints should be sorted in ascending order.
