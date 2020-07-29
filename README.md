@@ -3,6 +3,38 @@
 Changepoint is a Go library for changepoint detection with support for
 nonparametric distributions.
 
+```go
+package changepoint_test
+
+import (
+	"fmt"
+	"math"
+	"math/rand"
+
+	"pgregory.net/changepoint"
+)
+
+func ExampleNonParametric() {
+	r := rand.New(rand.NewSource(0))
+
+	var data []float64
+	for i := 0; i < 20; i++ {
+		data = append(data, math.Exp(r.NormFloat64()+1))
+	}
+	for i := 0; i < 60; i++ {
+		data = append(data, math.Exp(r.NormFloat64()))
+	}
+	for i := 0; i < 20; i++ {
+		data = append(data, math.Exp(r.NormFloat64()-1))
+	}
+
+	fmt.Println(changepoint.NonParametric(data, 1))
+
+	// Output:
+	// [14 78]
+}
+```
+
 ## License
 
 Changepoint is licensed under the [Apache License Version 2.0](./LICENSE).
