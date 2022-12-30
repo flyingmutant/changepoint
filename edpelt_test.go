@@ -144,8 +144,8 @@ func BenchmarkNonParametric(b *testing.B) {
 func TestNonParametric_ValidDistinctSortedIndexes(t *testing.T) {
 	rapid.Check(t, func(t *rapid.T) {
 		var (
-			data       = rapid.SliceOf(rapid.Float64()).Draw(t, "data").([]float64)
-			minSegment = rapid.IntMin(1).Draw(t, "minSegment").(int)
+			data       = rapid.SliceOf(rapid.Float64()).Draw(t, "data")
+			minSegment = rapid.IntMin(1).Draw(t, "minSegment")
 		)
 
 		changes := changepoint.NonParametric(data, minSegment)

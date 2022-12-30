@@ -26,15 +26,15 @@ import (
 //
 // The implementation is based on the following papers:
 //
-//   [Haynes2017] Kaylea Haynes, Paul Fearnhead, and Idris A. Eckley.
-//   "A computationally efficient nonparametric approach for changepoint detection."
-//   Statistics and Computing 27, no. 5 (2017): 1293-1305.
-//   https://doi.org/10.1007/s11222-016-9687-5
+//	[Haynes2017] Kaylea Haynes, Paul Fearnhead, and Idris A. Eckley.
+//	"A computationally efficient nonparametric approach for changepoint detection."
+//	Statistics and Computing 27, no. 5 (2017): 1293-1305.
+//	https://doi.org/10.1007/s11222-016-9687-5
 //
-//   [Killick2012] Rebecca Killick, Paul Fearnhead, and Idris A. Eckley.
-//   "Optimal detection of changepoints with a linear computational cost."
-//   Journal of the American Statistical Association 107, no. 500 (2012): 1590-1598.
-//   https://arxiv.org/pdf/1101.1438.pdf
+//	[Killick2012] Rebecca Killick, Paul Fearnhead, and Idris A. Eckley.
+//	"Optimal detection of changepoints with a linear computational cost."
+//	Journal of the American Statistical Association 107, no. 500 (2012): 1590-1598.
+//	https://arxiv.org/pdf/1101.1438.pdf
 func NonParametric(data []float64, minSegment int) []int {
 	if minSegment < 1 {
 		panic("minSegment must be positive")
@@ -66,18 +66,18 @@ func NonParametric(data []float64, minSegment int) []int {
 
 // Partial sums for empirical CDF (formula (2.1) from Section 2.1 "Model" in [Haynes2017])
 //
-//   partialSums'[i, tau] = (count(data[j] < t) * 2 + count(data[j] == t) * 1) for j=0..tau-1
-//   where t is the i-th quantile value (see Section 3.1 "Discrete approximation" in [Haynes2017] for details)
+//	partialSums'[i, tau] = (count(data[j] < t) * 2 + count(data[j] == t) * 1) for j=0..tau-1
+//	where t is the i-th quantile value (see Section 3.1 "Discrete approximation" in [Haynes2017] for details)
 //
 // In order to get better performance, we present
 // a two-dimensional array partialSums'[k, n + 1] as a single-dimensional array partialSums[k * (n + 1)].
 // We assume that partialSums'[i, tau] = partialSums[i * (n + 1) + tau].
 //
-// - We use doubled sum values in order to use []int instead of []float64 (it provides noticeable
-//   performance boost). Thus, multipliers for count(data[j] < t) and count(data[j] == t) are
-//   2 and 1 instead of 1 and 0.5 from the [Haynes2017].
-// - Note that these quantiles are not uniformly distributed: tails of the data distribution contain more
-//   quantile values than the center of the distribution
+//   - We use doubled sum values in order to use []int instead of []float64 (it provides noticeable
+//     performance boost). Thus, multipliers for count(data[j] < t) and count(data[j] == t) are
+//     2 and 1 instead of 1 and 0.5 from the [Haynes2017].
+//   - Note that these quantiles are not uniformly distributed: tails of the data distribution contain more
+//     quantile values than the center of the distribution
 func edPartialSums(data []float64, k int) []int32 {
 	n := len(data)
 	partialSums := make([]int32, k*(n+1))
